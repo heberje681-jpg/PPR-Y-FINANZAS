@@ -3,86 +3,69 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-# Configuración inicial de la página (Debe ser la primera línea)
+# Configuración inicial de la página
 st.set_page_config(page_title="Dashboard Financiero", layout="wide", initial_sidebar_state="expanded")
 
-# Inyección de CSS Personalizado (Magia UI/UX)
+# Inyección de CSS Personalizado (Estilo Minimalista/Fintech)
 st.markdown("""
 <style>
-    /* Variables de color: Acentos en verde oscuro y fondos oscuros elegantes */
     :root {
-        --dark-green: #0a4a27;
-        --light-green: #148043;
-        --card-bg: #1e1e1e;
+        --primary-blue: #007AFF;
+        --pure-white: #ffffff;
+        --card-bg: #1c1c1e;
     }
-
-    /* Estilo global y tipografía más limpia */
     html, body, [class*="css"] {
         font-family: 'Inter', sans-serif;
     }
-
-    /* Tarjetas de métricas con bordes redondeados, sombras y efecto Hover */
     div[data-testid="metric-container"] {
         background-color: var(--card-bg);
-        border-radius: 20px;
+        border-radius: 16px;
         padding: 20px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        border-left: 6px solid var(--dark-green);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        border-top: 4px solid var(--pure-white);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    
     div[data-testid="metric-container"]:hover {
         transform: translateY(-8px);
-        box-shadow: 0 12px 20px rgba(20, 128, 67, 0.3);
+        box-shadow: 0 12px 25px rgba(0, 122, 255, 0.2);
+        border-top: 4px solid var(--primary-blue);
     }
-
-    /* Estilo para los Sliders (Acento verde) */
     .stSlider > div > div > div > div {
-        background-color: var(--light-green) !important;
-    }
-
-    /* Botones más curvos y con hover */
-    div.stButton > button {
-        border-radius: 25px;
-        background-color: var(--dark-green);
-        color: white;
-        font-weight: 600;
-        border: none;
-        padding: 10px 24px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    }
-    div.stButton > button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 15px rgba(20, 128, 67, 0.4);
-        background-color: var(--light-green);
-        color: white;
+        background-color: var(--pure-white) !important;
     }
 </style>
 """, unsafe_allow_html=True)
+
+# -------------------------------------------------------------------
+# FUNCIÓN PARA FORMATEAR NÚMEROS A "M" y "k"
+# -------------------------------------------------------------------
+def formatear_kpi(numero):
+    if numero >= 1_000_000:
+        formateado = f"${numero/1_000_000:.1f}M"
+        return formateado.replace(".0M", "M") # Quita el .0 si es entero (Ej. 10.0M -> 10M)
+    elif numero >= 1_000:
+        formateado = f"${numero/1_000:.1f}k"
+        return formateado.replace(".0k", "k")
+    else:
+        return f"${numero:,.0f}"
 
 # -------------------------------------------------------------------
 # LÓGICA DE NAVEGACIÓN
 # -------------------------------------------------------------------
 with st.sidebar:
     st.markdown("### ⚙️ Control Maestro")
-    menu = st.radio(
-        "Selecciona el módulo:",
-        ("📈 Simulador de Retiro", "💼 Presupuesto Mensual")
-    )
+    menu = st.radio("Selecciona el módulo:", ("📈 Simulador de Retiro", "💼 Presupuesto Mensual"))
     st.markdown("---")
-    st.caption("Hecho con 🐍 Python y Streamlit")
+    st.caption("Desarrollado en 🐍 Python")
 
 # -------------------------------------------------------------------
 # PÁGINA 1: SIMULADOR DE RETIRO
 # -------------------------------------------------------------------
 if menu == "📈 Simulador de Retiro":
-    st.title("📈 Proyección de Patrimonio e Interés Compuesto")
-    st.markdown("Visualiza cómo crece tu dinero en el tiempo con aportaciones recurrentes.")
+    st.title("📈 Proyección de Patrimonio")
+    st.markdown("Visualiza cómo crece tu dinero en el tiempo con el poder del interés compuesto.")
 
-    # Fila de Controles (Sliders) en un contenedor
     with st.container():
-        st.subheader("Ajustes del Modelo")
         c1, c2, c3, c4 = st.columns(4)
         with c1:
             capital_inicial = st.number_input("Capital Inicial ($)", min_value=0, value=0, step=5000)
@@ -93,7 +76,6 @@ if menu == "📈 Simulador de Retiro":
         with c4:
             tasa_real = st.slider("Tasa Real Anual (%)", min_value=1.0, max_value=15.0, value=7.0, step=0.5)
 
-    # Motor de Cálculo del Interés Compuesto
     tasa_mensual = (tasa_real / 100) / 12
     meses_totales = anos * 12
     
@@ -104,102 +86,96 @@ if menu == "📈 Simulador de Retiro":
     for mes in range(1, meses_totales + 1):
         saldo_actual = saldo_actual * (1 + tasa_mensual) + aportacion_mensual
         total_aportado_acum += aportacion_mensual
-        if mes % 12 == 0:  # Guardar datos anuales para la gráfica
+        if mes % 12 == 0:
             ano_actual = mes // 12
-            rendimiento_ganado = saldo_actual - total_aportado_acum
             datos.append({
                 "Año": ano_actual,
-                "Aportado (Tus bolsillos)": total_aportado_acum,
-                "Interés Compuesto (Ganancia)": rendimiento_ganado,
+                "Capital Propio": total_aportado_acum,
+                "Rendimientos Generados": saldo_actual - total_aportado_acum,
                 "Total": saldo_actual
             })
             
     df = pd.DataFrame(datos)
     patrimonio_final = df["Total"].iloc[-1]
-    aportado_final = df["Aportado (Tus bolsillos)"].iloc[-1]
-    ganancia_final = df["Interés Compuesto (Ganancia)"].iloc[-1]
-    
-    # Cálculo del retiro mensual seguro (5% anual recomendado para dejar herencia o 4% conservador)
+    aportado_final = df["Capital Propio"].iloc[-1]
+    ganancia_final = df["Rendimientos Generados"].iloc[-1]
     sueldo_pasivo_mensual = (patrimonio_final * 0.05) / 12
 
-    # Fila de KPIs (Tarjetas)
-    st.markdown("### Resumen a 25 años")
+    # APLICAMOS LA NUEVA FUNCIÓN A LAS TARJETAS (KPIs)
+    st.markdown("### Resumen de tu Retiro")
     k1, k2, k3, k4 = st.columns(4)
-    k1.metric("Total Aportado", f"${aportado_final:,.2f}")
-    k2.metric("Ganancias de Inversión", f"${ganancia_final:,.2f}")
-    k3.metric("Patrimonio Final", f"${patrimonio_final:,.2f}")
-    k4.metric("Sueldo Mensual (5%)", f"${sueldo_pasivo_mensual:,.2f}", "+ Libertad")
+    k1.metric("Total Aportado", formatear_kpi(aportado_final))
+    k2.metric("Rendimientos", formatear_kpi(ganancia_final))
+    k3.metric("Patrimonio Final", formatear_kpi(patrimonio_final))
+    k4.metric("Sueldo Mensual Libre", formatear_kpi(sueldo_pasivo_mensual))
 
-    # Gráfico de Área Apilada (Estilo profesional)
     st.markdown("<br>", unsafe_allow_html=True)
-    fig = px.area(
-        df, 
-        x="Año", 
-        y=["Aportado (Tus bolsillos)", "Interés Compuesto (Ganancia)"],
-        color_discrete_sequence=["#1f77b4", "#148043"], # Azul y Verde oscuro
-        title="Crecimiento del Portafolio"
-    )
-    fig.update_layout(
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
-        font_color="white",
-        legend_title_text="",
-        hovermode="x unified"
-    )
+    fig = px.area(df, x="Año", y=["Capital Propio", "Rendimientos Generados"], color_discrete_sequence=["#E5E5EA", "#007AFF"])
+    fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", font_color="white", hovermode="x unified")
     st.plotly_chart(fig, use_container_width=True)
 
 # -------------------------------------------------------------------
 # PÁGINA 2: CONTROL DE PRESUPUESTO
 # -------------------------------------------------------------------
 elif menu == "💼 Presupuesto Mensual":
-    st.title("💼 Asignación de Presupuesto Base Cero")
-    st.markdown("Divide tus ingresos combinados (Sueldo + Negocio) de forma exacta.")
+    st.title("💼 Presupuesto Base Cero")
+    st.markdown("Controla exactamente a dónde va cada peso de tus ingresos combinados.")
 
-    # Ingreso Total en grande
-    st.markdown("### Ingreso del Mes")
-    ingreso_total = st.number_input("Ingreso Total Disponible ($)", min_value=0.0, value=82500.0, step=1000.0)
+    # 1. Ingreso Total
+    ingreso_total = st.number_input("Ingreso Total Disponible del Mes ($)", min_value=1000.0, value=82500.0, step=1000.0)
 
-    st.markdown("### Distribución Porcentual")
-    col_sliders, col_grafica = st.columns([1, 1])
+    # 2. Desglose de Costos Fijos
+    st.markdown("### 1. Tus Costos Fijos Exactos")
+    with st.expander("Haz clic para detallar los gastos fijos de este mes", expanded=True):
+        g1, g2, g3 = st.columns(3)
+        with g1:
+            renta = st.number_input("🏠 Hipoteca / Renta ($)", value=12000.0, step=500.0)
+            servicios = st.number_input("⚡ Servicios (Luz, Internet, etc.) ($)", value=2500.0, step=100.0)
+        with g2:
+            auto = st.number_input("🚗 Autos (Mensualidad y Gasolina) ($)", value=6000.0, step=500.0)
+            supermercado = st.number_input("🛒 Supermercado / Comida ($)", value=8000.0, step=500.0)
+        with g3:
+            seguros = st.number_input("🛡️ Seguros (Médico, Auto) ($)", value=2000.0, step=100.0)
+            otros = st.number_input("📦 Otros fijos ($)", value=1500.0, step=100.0)
 
-    with col_sliders:
-        st.write("Ajusta los sliders. La suma debe ser exactamente 100%.")
-        pct_fijos = st.slider("Gastos Fijos (Casa, Autos, Servicios) %", 0, 100, 50)
-        pct_inversion = st.slider("Retiro e Inversiones (S&P 500) %", 0, 100, 25)
-        pct_estilo = st.slider("Estilo de Vida (Viajes, Salidas) %", 0, 100, 25)
+    # Cálculos Matemáticos de Fijos
+    total_fijos = renta + servicios + auto + supermercado + seguros + otros
+    pct_fijos = (total_fijos / ingreso_total) * 100
+    dinero_restante = ingreso_total - total_fijos
+    pct_restante = 100.0 - pct_fijos
+
+    st.markdown("### 2. Asignación del Restante")
+    
+    # Validaciones para evitar que gasten más de lo que ganan
+    if dinero_restante < 0:
+        st.error(f"⚠️ Peligro: Tus gastos fijos (${total_fijos:,.2f}) superan tu ingreso. Estás perdiendo dinero.")
+    else:
+        st.info(f"Tus gastos fijos suman **${total_fijos:,.2f}** y consumen el **{pct_fijos:.1f}%** de tu sueldo. Tienes un **{pct_restante:.1f}%** libre para Inversión y Estilo de Vida.")
         
-        suma_pct = pct_fijos + pct_inversion + pct_estilo
-        
-        if suma_pct == 100:
-            st.success("✅ ¡Perfecto! Presupuesto cuadrado al 100%.")
-        elif suma_pct > 100:
-            st.error(f"⚠️ Te pasaste por {suma_pct - 100}%. Reduce alguna categoría.")
-        else:
-            st.warning(f"⚠️ Te falta asignar {100 - suma_pct}%. Aprovecha al máximo tu dinero.")
+        col_sliders, col_grafica = st.columns([1, 1])
 
-    # Cálculos en pesos
-    monto_fijos = ingreso_total * (pct_fijos / 100)
-    monto_inversion = ingreso_total * (pct_inversion / 100)
-    monto_estilo = ingreso_total * (pct_estilo / 100)
+        with col_sliders:
+            st.write(f"Distribuye el {pct_restante:.1f}% sobrante:")
+            # El slider tiene como máximo el porcentaje restante, calculando en automático el estilo de vida
+            pct_inversion = st.slider("📈 Porcentaje para el Retiro (S&P 500) %", min_value=0.0, max_value=float(pct_restante), value=float(pct_restante)*0.5, step=1.0)
+            pct_estilo = pct_restante - pct_inversion
+            
+            st.write(f"✈️ Estilo de Vida se ajusta automáticamente a: **{pct_estilo:.1f}%**")
 
-    with col_grafica:
-        # Gráfico de Dona para los porcentajes
-        labels = ['Gastos Fijos', 'Inversión', 'Estilo de Vida']
-        values = [monto_fijos, monto_inversion, monto_estilo]
-        colores = ['#4A90E2', '#148043', '#F5A623'] # Azul, Verde Oscuro, Naranja
-        
-        fig2 = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.5, marker=dict(colors=colores))])
-        fig2.update_layout(
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)",
-            font_color="white",
-            margin=dict(t=20, b=20, l=20, r=20)
-        )
-        st.plotly_chart(fig2, use_container_width=True)
+        monto_inversion = ingreso_total * (pct_inversion / 100)
+        monto_estilo = ingreso_total * (pct_estilo / 100)
 
-    # Tarjetas de Sobres Finales
-    st.markdown("### Tus Transferencias del Mes")
-    t1, t2, t3 = st.columns(3)
-    t1.metric("🏠 Gastos Fijos", f"${monto_fijos:,.2f}")
-    t2.metric("📈 Inversión Segura", f"${monto_inversion:,.2f}")
-    t3.metric("✈️ Estilo de Vida", f"${monto_estilo:,.2f}")
+        with col_grafica:
+            labels = ['Gastos Fijos', 'Inversión', 'Estilo de Vida']
+            values = [total_fijos, monto_inversion, monto_estilo]
+            colores = ['#FFFFFF', '#007AFF', '#3A3A3C']
+            
+            fig2 = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.5, marker=dict(colors=colores, line=dict(color='#000000', width=2)))])
+            fig2.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", font_color="white", margin=dict(t=20, b=20, l=20, r=20))
+            st.plotly_chart(fig2, use_container_width=True)
+
+        st.markdown("### Resumen Final (Pesos Exactos)")
+        t1, t2, t3 = st.columns(3)
+        t1.metric("🏠 Para Costos Fijos", formatear_kpi(total_fijos))
+        t2.metric("📈 Para el Broker (Retiro)", formatear_kpi(monto_inversion))
+        t3.metric("✈️ Para Disfrutar", formatear_kpi(monto_estilo))
