@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planificador Financiero Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         /* PALETA FINTECH PREMIUM */
         :root {
-            --bg-main: #0B0F19; /* Azul marino casi negro */
-            --bg-card: #131A2B; /* Fondo de tarjetas */
+            --bg-main: #0B0F19; 
+            --bg-card: #131A2B; 
             --text-main: #F8FAFC;
             --text-muted: #94A3B8;
             --border-color: #1E293B;
-            --finance-green: #10B981; /* Verde crecimiento */
-            --finance-blue: #3B82F6;  /* Azul confianza */
+            --finance-green: #10B981; 
+            --finance-blue: #3B82F6;  
             --nu-purple: #8B5CF6;
         }
         
@@ -39,11 +39,29 @@
         h1 { font-weight: 800; font-size: 30px; margin-bottom: 8px; letter-spacing: -0.5px; }
         p.subtitle { color: var(--text-muted); font-size: 15px; margin-bottom: 40px; }
         
+        /* ACORDEONES (PREGUNTAS DESPLEGABLES) */
+        .accordion-wrapper { display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px; }
+        .accordion-item { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; transition: all 0.3s ease; }
+        .accordion-header { width: 100%; text-align: left; padding: 22px 25px; background: transparent; border: none; color: var(--text-main); font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.2s; }
+        .accordion-header:hover { background-color: rgba(255,255,255,0.02); }
+        .accordion-header .title-wrapper { display: flex; align-items: center; gap: 15px; }
+        .accordion-header .icon-box { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 10px; background: rgba(59, 130, 246, 0.1); color: var(--finance-blue); }
+        .accordion-header svg.icon { width: 20px; height: 20px; fill: currentColor; }
+        .accordion-header svg.chevron { width: 16px; height: 16px; fill: var(--text-muted); transition: transform 0.3s ease; }
+        
+        /* Estado Activo del Acordeón */
+        .accordion-item.active { border-color: var(--finance-blue); box-shadow: 0 4px 20px rgba(59, 130, 246, 0.08); }
+        .accordion-item.active .icon-box { background: var(--finance-blue); color: white; }
+        .accordion-item.active svg.chevron { transform: rotate(180deg); fill: var(--finance-blue); }
+        
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .accordion-content-inner { padding: 0 25px 25px 80px; color: var(--text-muted); font-size: 15px; line-height: 1.7; }
+        .accordion-content-inner ul { margin-left: 20px; margin-top: 10px; }
+        .accordion-content-inner li { margin-bottom: 8px; }
+        .accordion-content-inner b { color: var(--text-main); font-weight: 600; }
+
         /* CARDS & INPUTS */
         .content-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; margin-bottom: 25px; }
-        .content-card h3 { margin-bottom: 15px; font-size: 18px; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
-        .content-card p, .content-card li { color: var(--text-muted); font-size: 14px; margin-bottom: 12px; }
-        
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
         .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 25px; }
         
@@ -70,7 +88,7 @@
         .nu-banner { background: #1A1525; border: 1px solid #3B2D59; border-radius: 16px; padding: 40px; text-align: center; margin-top: 40px; position: relative; overflow: hidden; }
         .nu-logo { display: inline-block; font-size: 40px; font-weight: 900; letter-spacing: -2px; color: var(--nu-purple); margin-bottom: 15px; }
         .nu-badge { background: rgba(139, 92, 246, 0.1); color: var(--nu-purple); font-size: 11px; font-weight: 800; padding: 6px 14px; border-radius: 20px; letter-spacing: 1px; display: inline-block; margin-bottom: 15px; border: 1px solid rgba(139, 92, 246, 0.2); }
-        .btn-cta { display: inline-block; background: var(--nu-purple); color: white; padding: 14px 35px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; margin-top: 20px; transition: 0.3s; }
+        .btn-cta { display: inline-block; background: var(--nu-purple); color: white; padding: 14px 35px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; margin-top: 20px; transition: 0.3s; cursor: pointer; border: none; }
         .btn-cta:hover { background: #7C3AED; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); }
         
         .section { display: none; animation: fadeIn 0.4s ease-out; }
@@ -103,7 +121,6 @@
         
         <div style="flex-grow: 1;"></div>
         
-        <!-- Anuncio Nu Lateral Minimalista -->
         <div style="background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 10px; padding: 20px; text-align: center; margin-top: 20px;">
             <div style="color: var(--nu-purple); font-weight: 900; font-size: 24px; margin-bottom: 5px; letter-spacing: -1px;">nu</div>
             <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">Haz crecer tu liquidez<br><b>13.00%</b> anual.</p>
@@ -115,36 +132,75 @@
     <div class="main-content">
         <div class="container">
             
-            <!-- PÁGINA 1: GUÍA EDUCATIVA -->
+            <!-- PÁGINA 1: GUÍA EDUCATIVA (ESTILO LANDING PAGE ACORDEÓN) -->
             <div id="guia" class="section active">
-                <h1>Aprende a Invertir</h1>
-                <p class="subtitle">Conceptos fundamentales antes de proyectar tus finanzas.</p>
                 
-                <div class="content-card">
-                    <h3>El poder del Interés Compuesto</h3>
-                    <p>Imagina que haces una bola de nieve en la cima de una montaña. Al principio es pequeña y tienes que empujarla con tus propias manos (tu <b>Capital Aportado</b>). Sin embargo, mientras va bajando, la nieve vieja recoge nieve nueva (los <b>Rendimientos</b>).</p>
-                    <p>Llegará un punto donde la bola es tan gigantesca que crece sola. Ese es el interés compuesto: ganar intereses sobre los intereses que ya habías ganado. El factor más importante no es cuánto dinero tienes hoy, sino el tiempo que dejas rodar esa bola.</p>
+                <!-- Hero Section de la Guía -->
+                <div style="text-align: center; margin-bottom: 50px; margin-top: 20px;">
+                    <h1 style="font-size: 40px; font-weight: 900; margin-bottom: 15px;">La ingeniería detrás de tu riqueza.</h1>
+                    <p style="color: var(--text-muted); font-size: 18px; max-width: 600px; margin: 0 auto;">No necesitas un salario millonario para ser libre. Descubre los sistemas exactos que usan los expertos para multiplicar su capital.</p>
+                </div>
+                
+                <!-- Acordeones Interactivos -->
+                <div class="accordion-wrapper">
+                    
+                    <div class="accordion-item active">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="title-wrapper">
+                                <div class="icon-box"><svg class="icon" viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg></div>
+                                ¿Cómo funciona el Interés Compuesto?
+                            </div>
+                            <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                        </button>
+                        <div class="accordion-content" style="max-height: 500px;"> <!-- Abierto por defecto -->
+                            <div class="accordion-content-inner">
+                                <p>Imagina que haces una bola de nieve en la cima de una montaña. Al principio es pequeña y tienes que empujarla con tus propias manos (tu <b>Capital Aportado</b>). Sin embargo, mientras va bajando, la nieve vieja recoge nieve nueva (los <b>Rendimientos</b>).</p>
+                                <p style="margin-top: 15px;">Llegará un punto donde la bola es tan gigantesca que crece sola. Ese es el interés compuesto: ganar intereses sobre los intereses que ya habías ganado. El factor más importante de la ecuación no es cuánto dinero tienes hoy, sino <b>el tiempo</b> que dejas rodar esa bola ininterrumpidamente.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="title-wrapper">
+                                <div class="icon-box"><svg class="icon" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg></div>
+                                La Regla de Asignación (50/30/20)
+                            </div>
+                            <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <p>La estructura base para construir riqueza sin ahogarte en deudas consiste en darle un trabajo a cada peso antes de gastarlo:</p>
+                                <ul>
+                                    <li><b>50% Costos Fijos:</b> Renta, luz, gasolina, supermercado, seguros. Si esto supera el 50%, tu estilo de vida es insostenible a largo plazo.</li>
+                                    <li><b>20% Estilo de Vida:</b> Salidas, restaurantes, hobbies, ropa. El dinero está para disfrutarse hoy también.</li>
+                                    <li><b>30% Tu Futuro:</b> Inversiones de largo plazo (retiro) y fondos de liquidez (emergencias). Este porcentaje es el que compra tu libertad.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="title-wrapper">
+                                <div class="icon-box"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
+                                Tasa Real vs. Inflación
+                            </div>
+                            <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <p>No todo lo que paga el banco es ganancia. La inflación es el aumento invisible de los precios que se come tu dinero. Por ejemplo, si un banco te paga 10% de rendimiento, pero la inflación del país es 4%, tu <b>Tasa Real (ganancia pura) es 6%</b>.</p>
+                                <p style="margin-top: 15px;">Históricamente, el mercado de valores de Estados Unidos (el S&P 500) ha ofrecido una tasa real promedio del <b>7% al 8% anual</b> a muy largo plazo, después de descontar la inflación.</p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="grid-2">
-                    <div class="content-card" style="margin-bottom: 0;">
-                        <h3>La Regla de Asignación</h3>
-                        <p>La estructura base para construir riqueza es:</p>
-                        <ul style="margin-left: 20px;">
-                            <li><b>50% Fijos:</b> Renta, luz, gasolina.</li>
-                            <li><b>20% Estilo:</b> Salidas, hobbies.</li>
-                            <li><b>30% Futuro:</b> Inversiones de largo plazo y fondos de liquidez.</li>
-                        </ul>
-                    </div>
-                    <div class="content-card" style="margin-bottom: 0;">
-                        <h3>Tasa Real vs Inflación</h3>
-                        <p>No todo lo que paga el banco es ganancia. Si te pagan 10% pero la inflación es 4%, tu <b>Tasa Real es 6%</b>.</p>
-                        <p>Históricamente, el mercado de valores (S&P 500) ofrece una tasa real promedio del 7% al 8% anual a largo plazo.</p>
-                    </div>
-                </div>
-
-                <div style="text-align: right; margin-top: 20px;">
-                    <button class="btn-cta" style="background: var(--finance-blue); margin-top:0;" onclick="document.querySelectorAll('.menu-btn')[1].click()">Abrir Simulador de Retiro</button>
+                <div style="text-align: center; margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--border-color);">
+                    <h3 style="margin-bottom: 20px; color: var(--text-main);">¿Listo para ver tus números?</h3>
+                    <button class="btn-cta" style="background: var(--finance-blue); font-size: 16px; padding: 16px 40px;" onclick="document.querySelectorAll('.menu-btn')[1].click()">Proyectar mi Retiro 👉</button>
                 </div>
             </div>
 
@@ -173,7 +229,6 @@
                     <canvas id="retiroChart"></canvas>
                 </div>
 
-                <!-- BANNER PREMIUM NU -->
                 <div class="nu-banner">
                     <span class="nu-badge">LIQUIDEZ INTELIGENTE</span>
                     <div class="nu-logo">nu</div>
@@ -239,7 +294,26 @@
     </div>
 
     <script>
-        // Formateador
+        // Animación de los Acordeones (Dropdowns)
+        function toggleAccordion(button) {
+            const item = button.parentElement;
+            const content = item.querySelector('.accordion-content');
+            const isActive = item.classList.contains('active');
+            
+            // Cerrar todos
+            document.querySelectorAll('.accordion-item').forEach(acc => {
+                acc.classList.remove('active');
+                acc.querySelector('.accordion-content').style.maxHeight = null;
+            });
+            
+            // Abrir el clickeado si no estaba activo
+            if (!isActive) {
+                item.classList.add('active');
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        }
+
+        // Formateador Financiero
         function fMoney(num) {
             if (num === 0 || isNaN(num)) return "$0";
             if (num >= 1000000) return "$" + (num / 1000000).toFixed(1).replace('.0', '') + "M";
@@ -247,7 +321,7 @@
             return "$" + num.toLocaleString('en-US', {maximumFractionDigits:0});
         }
 
-        // Navegación
+        // Navegación de Pestañas
         function switchTab(tabId, element) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
@@ -287,7 +361,6 @@
 
             let ctx = document.getElementById('retiroChart').getContext('2d');
             
-            // Gradiente verde para los rendimientos
             let gradient = ctx.createLinearGradient(0, 0, 0, 400);
             gradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
             gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
