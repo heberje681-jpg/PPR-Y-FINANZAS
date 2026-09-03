@@ -3,77 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Financiero Pro</title>
+    <title>Planificador Financiero Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* PALETA OFICIAL DE STREAMLIT DARK MODE */
+        /* PALETA FINTECH PREMIUM */
         :root {
-            --bg-color: #0E1117;
-            --sidebar-bg: #262730;
-            --card-bg: #262730;
-            --text-main: #FAFAFA;
-            --text-muted: #9DA3AE;
-            --border-color: #3B3D47;
-            --primary-accent: #FF4B4B; /* El rojo/rosa clásico de Streamlit */
-            --nu-purple: #8A05BE;
+            --bg-main: #0B0F19; /* Azul marino casi negro */
+            --bg-card: #131A2B; /* Fondo de tarjetas */
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border-color: #1E293B;
+            --finance-green: #10B981; /* Verde crecimiento */
+            --finance-blue: #3B82F6;  /* Azul confianza */
+            --nu-purple: #8B5CF6;
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); display: flex; min-height: 100vh; line-height: 1.6; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; line-height: 1.6; }
         
-        /* Sidebar Estilo Streamlit */
-        .sidebar { width: 300px; background-color: var(--sidebar-bg); padding: 30px 20px; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; }
-        .sidebar h2 { font-weight: 700; font-size: 18px; margin-bottom: 30px; letter-spacing: -0.5px; }
+        /* SIDEBAR PROFESIONAL */
+        .sidebar { width: 300px; background-color: var(--bg-card); padding: 30px 20px; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; }
+        .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; margin-bottom: 40px; color: var(--text-main); }
+        .brand svg { width: 24px; height: 24px; fill: var(--finance-blue); }
         
-        .menu-btn { background: transparent; border: none; color: var(--text-main); padding: 10px 15px; width: 100%; text-align: left; border-radius: 6px; cursor: pointer; margin-bottom: 5px; font-weight: 500; transition: 0.2s; display: flex; align-items: center; }
-        .menu-btn:hover { background-color: rgba(255,255,255,0.05); }
-        .menu-btn.active { background-color: rgba(255, 75, 75, 0.15); color: var(--primary-accent); font-weight: 600; }
+        .menu-btn { background: transparent; border: none; color: var(--text-muted); padding: 12px 15px; width: 100%; text-align: left; border-radius: 8px; cursor: pointer; margin-bottom: 8px; font-weight: 500; font-size: 14px; transition: all 0.2s ease; display: flex; align-items: center; gap: 12px; }
+        .menu-btn svg { width: 18px; height: 18px; fill: currentColor; }
+        .menu-btn:hover { background-color: rgba(255,255,255,0.03); color: var(--text-main); }
+        .menu-btn.active { background-color: rgba(16, 185, 129, 0.1); color: var(--finance-green); font-weight: 600; border-left: 3px solid var(--finance-green); }
         
-        /* Contenedor Principal */
+        /* MAIN LAYOUT */
         .main-content { flex: 1; padding: 50px; overflow-y: auto; display: flex; justify-content: center; }
-        .container { max-width: 900px; width: 100%; }
+        .container { max-width: 950px; width: 100%; }
         
-        h1 { font-weight: 800; font-size: 32px; margin-bottom: 10px; letter-spacing: -1px; }
-        p.subtitle { color: var(--text-muted); font-size: 16px; margin-bottom: 40px; }
+        h1 { font-weight: 800; font-size: 30px; margin-bottom: 8px; letter-spacing: -0.5px; }
+        p.subtitle { color: var(--text-muted); font-size: 15px; margin-bottom: 40px; }
         
-        /* Tarjetas de Contenido (Educación) */
-        .content-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 30px; margin-bottom: 25px; }
-        .content-card h3 { margin-bottom: 15px; font-size: 20px; color: var(--primary-accent); }
-        .content-card p { margin-bottom: 15px; color: #D1D5DB; }
-        .content-card ul { margin-left: 20px; color: #D1D5DB; margin-bottom: 15px; }
-        .content-card li { margin-bottom: 8px; }
+        /* CARDS & INPUTS */
+        .content-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; margin-bottom: 25px; }
+        .content-card h3 { margin-bottom: 15px; font-size: 18px; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        .content-card p, .content-card li { color: var(--text-muted); font-size: 14px; margin-bottom: 12px; }
         
-        /* Inputs Estilo Streamlit */
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
-        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 30px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 25px; }
+        
         .input-group { display: flex; flex-direction: column; margin-bottom: 15px; }
-        label { font-size: 14px; color: var(--text-main); margin-bottom: 8px; font-weight: 500; }
+        label { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        input[type="number"] { background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px 15px; border-radius: 8px; font-size: 15px; outline: none; transition: 0.2s; }
-        input[type="number"]:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 1px var(--primary-accent); }
+        input[type="number"] { background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-main); padding: 14px 15px; border-radius: 8px; font-size: 16px; outline: none; transition: 0.3s; font-family: 'Inter', monospace; }
+        input[type="number"]:focus { border-color: var(--finance-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
         
-        /* Sliders */
+        /* SLIDERS MODERNOS */
         input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; background: var(--primary-accent); cursor: pointer; margin-top: -6px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: var(--border-color); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: var(--finance-green); cursor: pointer; margin-top: -6px; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); border: 2px solid #FFF; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: var(--border-color); border-radius: 2px; }
         
-        /* Tarjetas KPI */
-        .kpi-card { background: var(--bg-color); padding: 20px; border-radius: 10px; border: 1px solid var(--border-color); border-top: 3px solid var(--primary-accent); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .kpi-title { font-size: 14px; color: var(--text-muted); margin-bottom: 5px; font-weight: 500; }
-        .kpi-value { font-size: 26px; font-weight: 800; color: var(--text-main); }
+        /* KPIS FINANCIEROS */
+        .kpi-card { background: var(--bg-card); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); transition: 0.3s; }
+        .kpi-card:hover { border-color: var(--text-muted); transform: translateY(-2px); }
+        .kpi-title { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .kpi-value { font-size: 24px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
+        .kpi-value.green { color: var(--finance-green); }
+        .kpi-value.blue { color: var(--finance-blue); }
         
-        /* Diseño Especial Banner Nu */
-        .nu-banner { background: linear-gradient(135deg, #8A05BE, #5C037F); border-radius: 16px; padding: 40px; text-align: center; margin-top: 40px; box-shadow: 0 10px 30px rgba(138, 5, 190, 0.3); position: relative; overflow: hidden; }
-        .nu-banner::before { content: ''; position: absolute; top: -50px; left: -50px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%; }
-        .nu-logo { display: inline-block; font-size: 40px; font-weight: 900; letter-spacing: -2px; color: white; margin-bottom: 15px; }
-        .nu-badge { background: white; color: var(--nu-purple); font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 20px; letter-spacing: 1px; display: inline-block; margin-bottom: 15px; }
-        .btn-cta { display: inline-block; background: white; color: var(--nu-purple); padding: 15px 35px; border-radius: 30px; text-decoration: none; font-weight: 800; font-size: 16px; margin-top: 20px; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .btn-cta:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+        /* BANNER NU ACTUALIZADO */
+        .nu-banner { background: #1A1525; border: 1px solid #3B2D59; border-radius: 16px; padding: 40px; text-align: center; margin-top: 40px; position: relative; overflow: hidden; }
+        .nu-logo { display: inline-block; font-size: 40px; font-weight: 900; letter-spacing: -2px; color: var(--nu-purple); margin-bottom: 15px; }
+        .nu-badge { background: rgba(139, 92, 246, 0.1); color: var(--nu-purple); font-size: 11px; font-weight: 800; padding: 6px 14px; border-radius: 20px; letter-spacing: 1px; display: inline-block; margin-bottom: 15px; border: 1px solid rgba(139, 92, 246, 0.2); }
+        .btn-cta { display: inline-block; background: var(--nu-purple); color: white; padding: 14px 35px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; margin-top: 20px; transition: 0.3s; }
+        .btn-cta:hover { background: #7C3AED; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); }
         
-        .section { display: none; animation: fadeIn 0.4s; }
+        .section { display: none; animation: fadeIn 0.4s ease-out; }
         .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         canvas { max-width: 100%; margin-top: 20px; }
     </style>
 </head>
@@ -81,18 +83,31 @@
 
     <!-- BARRA LATERAL -->
     <div class="sidebar">
-        <h2>📊 Planificador Pro</h2>
-        <button class="menu-btn active" onclick="switchTab('guia', this)">📖 1. Guía de Inversión</button>
-        <button class="menu-btn" onclick="switchTab('simulador', this)">📈 2. Simulador de Retiro</button>
-        <button class="menu-btn" onclick="switchTab('presupuesto', this)">💼 3. Presupuesto Mensual</button>
+        <div class="brand">
+            <svg viewBox="0 0 24 24"><path d="M3 3v18h18v-2H5V3H3zm14 10l-4-4-4 4-4-4v3l4 4 4-4 4 4v-3z"/></svg>
+            Planificador Pro
+        </div>
+        
+        <button class="menu-btn active" onclick="switchTab('guia', this)">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+            Guía de Inversión
+        </button>
+        <button class="menu-btn" onclick="switchTab('simulador', this)">
+            <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+            Simulador de Retiro
+        </button>
+        <button class="menu-btn" onclick="switchTab('presupuesto', this)">
+            <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            Presupuesto Mensual
+        </button>
         
         <div style="flex-grow: 1;"></div>
         
-        <!-- Anuncio Nu Pequeño Sidebar -->
-        <div style="background: var(--bg-color); border: 1px solid var(--nu-purple); border-radius: 10px; padding: 15px; text-align: center; margin-top: 20px;">
-            <div style="color: var(--nu-purple); font-weight: 900; font-size: 20px; margin-bottom: 5px;">nu</div>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">13.00% anual de rendimiento.</p>
-            <a href="https://nubank.com.mx/mgm/?id=QZwETAFIV96OJeF2mLtqvA&msg=35985&utm_channel=referral&utm_medium=whatsapp&utm_source=mgm&mgm-campaign=mgm-cash-rewards" target="_blank" style="background: var(--nu-purple); color: white; text-decoration: none; padding: 8px; border-radius: 5px; font-size: 12px; font-weight: 600; display: block;">Solicitar Tarjeta</a>
+        <!-- Anuncio Nu Lateral Minimalista -->
+        <div style="background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 10px; padding: 20px; text-align: center; margin-top: 20px;">
+            <div style="color: var(--nu-purple); font-weight: 900; font-size: 24px; margin-bottom: 5px; letter-spacing: -1px;">nu</div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">Haz crecer tu liquidez<br><b>13.00%</b> anual.</p>
+            <a href="https://nubank.com.mx/mgm/?id=QZwETAFIV96OJeF2mLtqvA&msg=35985&utm_channel=referral&utm_medium=whatsapp&utm_source=mgm&mgm-campaign=mgm-cash-rewards" target="_blank" style="background: var(--nu-purple); color: white; text-decoration: none; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: 600; display: block;">Solicitar Tarjeta</a>
         </div>
     </div>
 
@@ -100,119 +115,111 @@
     <div class="main-content">
         <div class="container">
             
-            <!-- PÁGINA 1: GUÍA EDUCATIVA (NUEVA) -->
+            <!-- PÁGINA 1: GUÍA EDUCATIVA -->
             <div id="guia" class="section active">
-                <h1>📖 Aprende a Invertir</h1>
-                <p class="subtitle">Todo lo que necesitas saber antes de usar los simuladores financieros.</p>
+                <h1>Aprende a Invertir</h1>
+                <p class="subtitle">Conceptos fundamentales antes de proyectar tus finanzas.</p>
                 
                 <div class="content-card">
-                    <h3>¿Cómo funciona el Interés Compuesto?</h3>
+                    <h3>El poder del Interés Compuesto</h3>
                     <p>Imagina que haces una bola de nieve en la cima de una montaña. Al principio es pequeña y tienes que empujarla con tus propias manos (tu <b>Capital Aportado</b>). Sin embargo, mientras va bajando, la nieve vieja recoge nieve nueva (los <b>Rendimientos</b>).</p>
-                    <p>Llegará un punto donde la bola es tan gigantesca que crece sola sin que tú hagas esfuerzo. Ese es el interés compuesto: <b>ganar intereses sobre los intereses que ya habías ganado.</b> El factor más importante aquí no es cuánto dinero tienes hoy, sino <b>el tiempo</b> que dejas rodar esa bola.</p>
+                    <p>Llegará un punto donde la bola es tan gigantesca que crece sola. Ese es el interés compuesto: ganar intereses sobre los intereses que ya habías ganado. El factor más importante no es cuánto dinero tienes hoy, sino el tiempo que dejas rodar esa bola.</p>
                 </div>
 
-                <div class="content-card">
-                    <h3>¿Cuánto porcentaje de tu salario deberías invertir?</h3>
-                    <p>La regla de oro para construir verdadera riqueza es la adaptación de la regla <b>50/30/20</b>:</p>
-                    <ul>
-                        <li><b>50% Gastos Fijos:</b> Renta, luz, gasolina, supermercado.</li>
-                        <li><b>20% Estilo de Vida:</b> Salidas, restaurantes, hobbies, ropa.</li>
-                        <li><b>30% A tu Futuro (Inversión + Liquidez):</b> Este es el dinero que te comprará tu libertad. Idealmente, destina 20% al largo plazo (retiro) y 10% a liquidez (fondo de emergencias o compras a corto plazo).</li>
-                    </ul>
+                <div class="grid-2">
+                    <div class="content-card" style="margin-bottom: 0;">
+                        <h3>La Regla de Asignación</h3>
+                        <p>La estructura base para construir riqueza es:</p>
+                        <ul style="margin-left: 20px;">
+                            <li><b>50% Fijos:</b> Renta, luz, gasolina.</li>
+                            <li><b>20% Estilo:</b> Salidas, hobbies.</li>
+                            <li><b>30% Futuro:</b> Inversiones de largo plazo y fondos de liquidez.</li>
+                        </ul>
+                    </div>
+                    <div class="content-card" style="margin-bottom: 0;">
+                        <h3>Tasa Real vs Inflación</h3>
+                        <p>No todo lo que paga el banco es ganancia. Si te pagan 10% pero la inflación es 4%, tu <b>Tasa Real es 6%</b>.</p>
+                        <p>Históricamente, el mercado de valores (S&P 500) ofrece una tasa real promedio del 7% al 8% anual a largo plazo.</p>
+                    </div>
                 </div>
 
-                <div class="content-card">
-                    <h3>Entendiendo la Tasa de Rendimiento y la Inflación</h3>
-                    <p>No todo el porcentaje que te paga el banco es ganancia real. Existe la inflación (el aumento de los precios). Por ejemplo, si un banco te paga un 10% de interés, pero la inflación es del 4%, tu <b>Tasa Real Anual es del 6%</b>.</p>
-                    <p>En el simulador, te pedimos la <i>Tasa Real</i>. Para inversiones en la bolsa de valores (como el S&P 500 a largo plazo), la historia nos dice que puedes esperar una tasa real promedio del <b>7% al 8% anual</b>.</p>
-                </div>
-
-                <div class="content-card">
-                    <h3>¿En qué instrumentos debo invertir?</h3>
-                    <p>Para construir un portafolio a prueba de balas, necesitas dividir tu dinero en dos cubetas:</p>
-                    <ul>
-                        <li><b>Cubeta de Largo Plazo (Acciones):</b> Dinero que no tocarás en 10, 20 o 30 años. Se invierte en la Bolsa de Valores comprando ETFs como VOO o IVVPESO (las 500 empresas más grandes de EE.UU.). Da grandes rendimientos pero es volátil a corto plazo.</li>
-                        <li><b>Cubeta de Corto Plazo (Liquidez/Renta Fija):</b> Dinero para emergencias, el enganche de un auto o un viaje. Necesita estar seguro y disponible. Se invierte en CETES (gobierno) o SOFIPOS como la cuenta de Nu.</li>
-                    </ul>
-                </div>
-
-                <div style="text-align: right; margin-top: 30px;">
-                    <button class="btn-cta" style="background: var(--primary-accent); color: white;" onclick="document.querySelectorAll('.menu-btn')[1].click()">Ir al Simulador de Retiro 👉</button>
+                <div style="text-align: right; margin-top: 20px;">
+                    <button class="btn-cta" style="background: var(--finance-blue); margin-top:0;" onclick="document.querySelectorAll('.menu-btn')[1].click()">Abrir Simulador de Retiro</button>
                 </div>
             </div>
 
             <!-- PÁGINA 2: SIMULADOR DE RETIRO -->
             <div id="simulador" class="section">
-                <h1>📈 Motor de Retiro</h1>
-                <p class="subtitle">Proyecta tu libertad financiera usando la magia del interés compuesto.</p>
+                <h1>Motor de Retiro</h1>
+                <p class="subtitle">Proyecta el crecimiento de tu portafolio a largo plazo.</p>
                 
-                <div class="content-card" style="padding: 20px;">
+                <div class="content-card">
                     <div class="grid-4" style="margin-bottom: 0;">
                         <div class="input-group"><label>Capital Inicial ($)</label><input type="number" id="capInicial" value="0" oninput="calcularRetiro()"></div>
                         <div class="input-group"><label>Aportación Mensual ($)</label><input type="number" id="aportMensual" value="0" oninput="calcularRetiro()"></div>
-                        <div class="input-group"><label>Años invirtiendo (<span id="valAnos">10</span>)</label><input type="range" id="anosInv" min="1" max="40" value="10" oninput="document.getElementById('valAnos').innerText=this.value; calcularRetiro()"></div>
-                        <div class="input-group"><label>Tasa Real Anual (<span id="valTasa">7</span>%)</label><input type="range" id="tasaReal" min="1" max="15" step="0.5" value="7" oninput="document.getElementById('valTasa').innerText=this.value; calcularRetiro()"></div>
+                        <div class="input-group"><label>Años de Inversión (<span id="valAnos" style="color:var(--text-main);">10</span>)</label><input type="range" id="anosInv" min="1" max="40" value="10" oninput="document.getElementById('valAnos').innerText=this.value; calcularRetiro()"></div>
+                        <div class="input-group"><label>Tasa Real Anual (<span id="valTasa" style="color:var(--text-main);">7</span>%)</label><input type="range" id="tasaReal" min="1" max="15" step="0.5" value="7" oninput="document.getElementById('valTasa').innerText=this.value; calcularRetiro()"></div>
                     </div>
                 </div>
 
                 <div class="grid-4">
                     <div class="kpi-card"><div class="kpi-title">Capital Aportado</div><div class="kpi-value" id="resAportado">$0</div></div>
-                    <div class="kpi-card"><div class="kpi-title">Rendimientos Generados</div><div class="kpi-value" id="resRend" style="color: var(--primary-accent);">$0</div></div>
+                    <div class="kpi-card"><div class="kpi-title">Rendimientos</div><div class="kpi-value green" id="resRend">$0</div></div>
                     <div class="kpi-card"><div class="kpi-title">Patrimonio Final</div><div class="kpi-value" id="resTotal">$0</div></div>
-                    <div class="kpi-card"><div class="kpi-title">Sueldo Mensual Libre (5%)</div><div class="kpi-value" id="resMensual">$0</div></div>
+                    <div class="kpi-card"><div class="kpi-title">Sueldo Libre (5% Anual)</div><div class="kpi-value blue" id="resMensual">$0</div></div>
                 </div>
 
-                <div class="content-card" style="height: 400px; padding: 20px;">
+                <div class="content-card" style="height: 400px;">
                     <canvas id="retiroChart"></canvas>
                 </div>
 
                 <!-- BANNER PREMIUM NU -->
                 <div class="nu-banner">
-                    <span class="nu-badge">APROVECHA TU LIQUIDEZ</span>
+                    <span class="nu-badge">LIQUIDEZ INTELIGENTE</span>
                     <div class="nu-logo">nu</div>
-                    <h2 style="font-weight: 800; font-size: 28px; margin-bottom: 15px;">Haz que tu dinero crezca hasta 13.00% anual</h2>
-                    <p style="color: #E9D5FF; font-size: 16px; margin-bottom: 10px; max-width: 600px; margin-left: auto; margin-right: auto;">Te invito a tener la <b>Tarjeta de Crédito Nu ($0 anualidad)</b> y <b>Cuenta de Débito</b> con rendimientos diarios. Tu dinero siempre disponible para emergencias o metas a corto plazo.</p>
-                    <a href="https://nubank.com.mx/mgm/?id=QZwETAFIV96OJeF2mLtqvA&msg=35985&utm_channel=referral&utm_medium=whatsapp&utm_source=mgm&mgm-campaign=mgm-cash-rewards" target="_blank" class="btn-cta">Aplica en tan solo minutos 👉</a>
+                    <h2 style="font-weight: 800; font-size: 24px; margin-bottom: 12px; color: var(--text-main);">Haz que tu dinero crezca hasta 13.00% anual</h2>
+                    <p style="color: var(--text-muted); font-size: 15px; margin-bottom: 10px; max-width: 550px; margin-left: auto; margin-right: auto;">Te invito a tener la <b>Tarjeta de Crédito Nu ($0 anualidad)</b> y <b>Cuenta de Débito</b> con rendimientos diarios. Mantén tu dinero siempre disponible para emergencias.</p>
+                    <a href="https://nubank.com.mx/mgm/?id=QZwETAFIV96OJeF2mLtqvA&msg=35985&utm_channel=referral&utm_medium=whatsapp&utm_source=mgm&mgm-campaign=mgm-cash-rewards" target="_blank" class="btn-cta">Comenzar registro seguro</a>
                 </div>
             </div>
 
             <!-- PÁGINA 3: PRESUPUESTO -->
             <div id="presupuesto" class="section">
-                <h1>💼 Presupuesto Mensual</h1>
-                <p class="subtitle">Presupuesto Base Cero: Asigna una función a cada peso antes de gastarlo.</p>
+                <h1>Presupuesto Mensual</h1>
+                <p class="subtitle">Asigna una función a cada peso antes de gastarlo.</p>
                 
-                <div class="content-card" style="max-width: 400px;">
+                <div class="content-card" style="max-width: 400px; padding: 20px;">
                     <div class="input-group" style="margin-bottom: 0;">
-                        <label>Ingreso Total Disponible del Mes ($)</label>
+                        <label>Ingreso Total Disponible ($)</label>
                         <input type="number" id="ingresoTotal" value="0" oninput="calcularPresupuesto()">
                     </div>
                 </div>
 
-                <h3 style="margin-bottom: 15px; font-size: 18px;">1. Costos Fijos Operativos</h3>
+                <h3 style="margin-bottom: 15px; font-size: 16px; font-weight: 600;">1. Costos Fijos Operativos</h3>
                 <div class="content-card">
                     <div class="grid-4" style="margin-bottom: 0;">
-                        <div class="input-group"><label>🏠 Renta/Hipoteca</label><input type="number" class="fijo-input" value="0" oninput="calcularPresupuesto()"></div>
-                        <div class="input-group"><label>⚡ Servicios</label><input type="number" class="fijo-input" value="0" oninput="calcularPresupuesto()"></div>
-                        <div class="input-group"><label>🚗 Autos/Gasolina</label><input type="number" class="fijo-input" value="0" oninput="calcularPresupuesto()"></div>
-                        <div class="input-group"><label>🛒 Supermercado</label><input type="number" class="fijo-input" value="0" oninput="calcularPresupuesto()"></div>
-                        <div class="input-group"><label>🛡️ Seguros</label><input type="number" class="fijo-input" value="0" oninput="calcularPresupuesto()"></div>
-                        <div class="input-group"><label>📦 Otros Fijos</label><input type="number" class="fijo-input" value="0" oninput="calcularPresupuesto()"></div>
+                        <div class="input-group"><label>Renta/Hipoteca</label><input type="number" class="fijo-input" value="0" oninput="calcularPresupuesto()"></div>
+                        <div class="input-group"><label>Servicios</label><input type="number" class="fijo-input" value="0" oninput="calcularPresupuesto()"></div>
+                        <div class="input-group"><label>Autos/Gasolina</label><input type="number" class="fijo-input" value="0" oninput="calcularPresupuesto()"></div>
+                        <div class="input-group"><label>Supermercado</label><input type="number" class="fijo-input" value="0" oninput="calcularPresupuesto()"></div>
+                        <div class="input-group"><label>Seguros</label><input type="number" class="fijo-input" value="0" oninput="calcularPresupuesto()"></div>
+                        <div class="input-group"><label>Otros Fijos</label><input type="number" class="fijo-input" value="0" oninput="calcularPresupuesto()"></div>
                     </div>
                 </div>
 
-                <h3 style="margin-bottom: 15px; margin-top: 30px; font-size: 18px;">2. Distribución de Flujo Libre</h3>
+                <h3 style="margin-bottom: 15px; margin-top: 30px; font-size: 16px; font-weight: 600;">2. Distribución de Flujo Libre</h3>
                 <div class="grid-2">
-                    <div class="content-card" style="margin-bottom: 0;">
+                    <div class="content-card" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: center;">
                         <div class="input-group">
-                            <label>📈 Retiro / Bolsa (<span id="valRetiro">0</span>%)</label>
+                            <label>Retiro / Bolsa (<span id="valRetiro" style="color:var(--text-main);">0</span>%)</label>
                             <input type="range" id="pctRetiro" min="0" max="100" value="0" oninput="ajustarSliders()">
                         </div>
-                        <div class="input-group">
-                            <label>💧 Liquidez / Ahorro (<span id="valLiquidez">0</span>%)</label>
+                        <div class="input-group" style="margin-top: 15px;">
+                            <label>Liquidez / Ahorro (<span id="valLiquidez" style="color:var(--text-main);">0</span>%)</label>
                             <input type="range" id="pctLiquidez" min="0" max="100" value="0" oninput="ajustarSliders()">
                         </div>
-                        <div style="background: var(--bg-color); padding: 15px; border-radius: 8px; border-left: 4px solid var(--border-color); margin-top: 20px;">
-                            <span style="font-size: 14px; font-weight: 600;">✈️ Estilo de Vida: <span id="valEstilo">0</span>%</span>
+                        <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border-left: 3px solid var(--border-color); margin-top: 20px;">
+                            <span style="font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Estilo de Vida: <span id="valEstilo" style="color:var(--text-main); font-size: 16px;">0</span>%</span>
                         </div>
                     </div>
                     <div class="content-card" style="height: 280px; margin-bottom: 0;">
@@ -221,10 +228,10 @@
                 </div>
 
                 <div class="grid-4">
-                    <div class="kpi-card"><div class="kpi-title">🏠 Total Fijos</div><div class="kpi-value" id="kpiFijos">$0</div></div>
-                    <div class="kpi-card"><div class="kpi-title">📈 A Invertir</div><div class="kpi-value" id="kpiRetiro" style="color: var(--primary-accent);">$0</div></div>
-                    <div class="kpi-card"><div class="kpi-title">💧 Ahorrar / Nu</div><div class="kpi-value" id="kpiLiquidez" style="color: #8A05BE;">$0</div></div>
-                    <div class="kpi-card"><div class="kpi-title">✈️ Para Gastar</div><div class="kpi-value" id="kpiEstilo">$0</div></div>
+                    <div class="kpi-card"><div class="kpi-title">Total Fijos</div><div class="kpi-value" id="kpiFijos">$0</div></div>
+                    <div class="kpi-card"><div class="kpi-title">A Invertir</div><div class="kpi-value green" id="kpiRetiro">$0</div></div>
+                    <div class="kpi-card"><div class="kpi-title">Ahorro / Liquidez</div><div class="kpi-value blue" id="kpiLiquidez">$0</div></div>
+                    <div class="kpi-card"><div class="kpi-title">Para Gastar</div><div class="kpi-value" id="kpiEstilo">$0</div></div>
                 </div>
             </div>
 
@@ -232,6 +239,7 @@
     </div>
 
     <script>
+        // Formateador
         function fMoney(num) {
             if (num === 0 || isNaN(num)) return "$0";
             if (num >= 1000000) return "$" + (num / 1000000).toFixed(1).replace('.0', '') + "M";
@@ -239,6 +247,7 @@
             return "$" + num.toLocaleString('en-US', {maximumFractionDigits:0});
         }
 
+        // Navegación
         function switchTab(tabId, element) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
@@ -246,6 +255,10 @@
             element.classList.add('active');
             if(tabId === 'presupuesto') calcularPresupuesto();
         }
+
+        // Configuración Global Chart.js
+        Chart.defaults.color = '#94A3B8';
+        Chart.defaults.font.family = 'Inter';
 
         // ================= SIMULADOR =================
         let retiroChartObj = null;
@@ -273,14 +286,31 @@
             document.getElementById('resMensual').innerText = fMoney((saldo * 0.05) / 12);
 
             let ctx = document.getElementById('retiroChart').getContext('2d');
+            
+            // Gradiente verde para los rendimientos
+            let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
+            gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
             if(retiroChartObj) retiroChartObj.destroy();
             retiroChartObj = new Chart(ctx, {
                 type: 'line',
                 data: { labels: labels, datasets: [
-                    { label: 'Capital Aportado', data: dataAp, borderColor: '#3B3D47', backgroundColor: '#3B3D47', fill: true, tension: 0.3, pointRadius: 0 },
-                    { label: 'Rendimientos', data: dataRend, borderColor: '#FF4B4B', backgroundColor: 'rgba(255, 75, 75, 0.15)', fill: true, tension: 0.3, pointRadius: 0 }
+                    { label: 'Capital Aportado', data: dataAp, borderColor: '#3B82F6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 },
+                    { label: 'Rendimientos', data: dataRend, borderColor: '#10B981', backgroundColor: gradient, fill: true, tension: 0.4, pointRadius: 0, borderWidth: 3 }
                 ]},
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { stacked: true, grid: { color: '#3B3D47' }, ticks:{color:'#9DA3AE'} }, x: { grid: { display: false }, ticks:{color:'#9DA3AE'} } }, plugins: { legend: { labels: { color: '#FAFAFA' } } } }
+                options: { 
+                    responsive: true, maintainAspectRatio: false, 
+                    interaction: { mode: 'index', intersect: false },
+                    scales: { 
+                        y: { stacked: true, grid: { color: '#1E293B' }, border: { display: false } }, 
+                        x: { grid: { display: false }, border: { display: false } } 
+                    }, 
+                    plugins: { 
+                        legend: { position: 'top', align: 'end', labels: { boxWidth: 12, usePointStyle: true } },
+                        tooltip: { backgroundColor: '#131A2B', titleColor: '#F8FAFC', bodyColor: '#94A3B8', borderColor: '#1E293B', borderWidth: 1, padding: 12 }
+                    } 
+                }
             });
         }
 
@@ -340,12 +370,12 @@
             if(presChartObj) presChartObj.destroy();
             
             let datos = (fijos===0 && ret===0 && liq===0 && est===0) ? [1] : [fijos, ret, liq, est];
-            let colores = (fijos===0 && ret===0 && liq===0 && est===0) ? ['#3B3D47'] : ['#3B3D47', '#FF4B4B', '#8A05BE', '#9DA3AE'];
+            let colores = (fijos===0 && ret===0 && liq===0 && est===0) ? ['#1E293B'] : ['#1E293B', '#10B981', '#3B82F6', '#64748B'];
 
             presChartObj = new Chart(ctx, {
                 type: 'doughnut',
-                data: { labels: ['Fijos', 'Retiro', 'Liquidez', 'Estilo'], datasets: [{ data: datos, backgroundColor: colores, borderWidth: 2, borderColor: '#262730' }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#FAFAFA' } } } }
+                data: { labels: ['Fijos', 'Retiro', 'Liquidez', 'Estilo'], datasets: [{ data: datos, backgroundColor: colores, borderWidth: 0, hoverOffset: 4 }] },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'right', labels: { usePointStyle: true, boxWidth: 8 } } } }
             });
         }
 
