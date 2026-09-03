@@ -6,53 +6,75 @@ import plotly.graph_objects as go
 # Configuración inicial de la página
 st.set_page_config(page_title="Dashboard Financiero", layout="wide", initial_sidebar_state="expanded")
 
-# Inyección de CSS Avanzado (Modo Desarrollador Pro)
+# -------------------------------------------------------------------
+# INYECCIÓN DE CSS ESTILO "WHOOP" / HIGH-PERFORMANCE FINTECH
+# -------------------------------------------------------------------
 st.markdown("""
 <style>
+    /* Paleta Whoop: Fondo negro profundo, gris carbón y neón */
     :root {
-        --primary-blue: #007AFF;
-        --neon-blue: #00d2ff;
-        --pure-white: #ffffff;
-        --card-bg: #1c1c1e;
-        --bg-color: #121212;
+        --bg-black: #000000;
+        --card-dark: #121212;
+        --border-gray: #333333;
+        --neon-cyan: #00FFCC; /* Acento principal estilo Whoop */
+        --neon-blue: #007AFF;
+        --text-white: #FFFFFF;
+        --text-muted: #8E8E93;
     }
-    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+    html, body, [class*="css"] { 
+        font-family: 'Inter', -apple-system, sans-serif; 
+        background-color: var(--bg-black) !important;
+    }
+    
+    /* Hack para los Sliders (Neón y minimalista) */
     div[data-testid="stThumbValue"] {
-        background-color: var(--primary-blue) !important;
-        color: white !important;
-        border-radius: 8px !important;
-        padding: 4px 8px !important;
-        font-weight: bold;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        background-color: var(--neon-cyan) !important;
+        color: #000 !important;
+        border-radius: 20px !important;
+        padding: 4px 10px !important;
+        font-weight: 900;
+        box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
     }
+    .stSlider > div > div > div > div { background-color: var(--neon-cyan) !important; }
+
+    /* Tarjetas de KPIs (Bordes delgados, sin sombras exageradas, muy industrial) */
     div[data-testid="metric-container"] {
-        background-color: var(--card-bg);
+        background-color: var(--card-dark);
         border-radius: 12px;
-        padding: 15px 20px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-        border-left: 5px solid var(--primary-blue); 
-        transition: all 0.3s ease;
+        padding: 20px;
+        border: 1px solid var(--border-gray);
+        border-left: 4px solid var(--neon-cyan); 
+        transition: border-color 0.3s ease;
     }
     div[data-testid="metric-container"]:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 122, 255, 0.25);
-        border-left: 5px solid var(--neon-blue); 
+        border: 1px solid var(--neon-cyan);
     }
+    
+    /* Quitar encabezado default */
     header {visibility: hidden;}
-    hr { border-color: #333333 !important; }
+    
+    /* Cajas de Alertas / Disclaimer */
     .disclaimer-box {
-        background-color: #2c2c2e;
-        padding: 15px;
-        border-radius: 10px;
-        border-left: 4px solid var(--pure-white);
+        background-color: var(--card-dark);
+        padding: 15px 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border-gray);
+        border-left: 4px solid var(--neon-blue);
         margin-bottom: 20px;
+        color: var(--text-white);
+    }
+    
+    /* Botones y Banners de Monetización (Hover effects) */
+    .monetization-btn {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .monetization-btn:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 15px rgba(0, 255, 204, 0.5) !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------------------------------------------------------
-# FUNCIÓN PARA FORMATEAR NÚMEROS A "M" y "k"
-# -------------------------------------------------------------------
 def formatear_kpi(numero):
     if numero >= 1_000_000:
         formateado = f"${numero/1_000_000:.1f}M"
@@ -64,20 +86,32 @@ def formatear_kpi(numero):
         return f"${numero:,.0f}"
 
 # -------------------------------------------------------------------
-# LÓGICA DE NAVEGACIÓN
+# LÓGICA DE NAVEGACIÓN Y BARRA LATERAL (CON ZONA DE ANUNCIO)
 # -------------------------------------------------------------------
 with st.sidebar:
-    st.markdown("### ⚙️ Centro de Control")
-    menu = st.radio("Selecciona el módulo:", ("📈 Simulador de Retiro", "💼 Presupuesto Mensual"))
+    st.markdown("### ⚡ Sistema Financiero")
+    menu = st.radio("Módulos:", ("📈 Simulador de Retiro", "💼 Presupuesto Mensual"))
     st.markdown("---")
-    st.caption("Desarrollado por **Heber Orduño**")
+    
+    # ZONA DE MONETIZACIÓN 1: BANNER ADSENSE NATIVO (Sidebar)
+    # Aquí puedes cambiar la imagen, colores y link de referido de tu anunciante.
+    st.markdown("""
+    <div style="background-color: #121212; padding: 20px; border-radius: 12px; border: 1px solid #333; text-align: center; margin-top: 20px;">
+        <p style="color: #8E8E93; font-size: 10px; margin-bottom: 10px; letter-spacing: 2px;">SPONSORED</p>
+        <h3 style="color: #fff; margin-top: 0;">💳 Tarjeta Nu</h3>
+        <p style="color: #aaa; font-size: 13px; margin-bottom: 15px;">Haz crecer tu liquidez. <b>14% de rendimiento anual</b> disponible 24/7.</p>
+        <a href="https://nu.com.mx/" target="_blank" style="background-color: #8A05BE; color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-size: 14px; font-weight: bold; display: inline-block; width: 100%;">Solicitar Ahora</a>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<br><p style='color:#8E8E93; font-size:12px; text-align:center;'>v2.0 | Heber Orduño</p>", unsafe_allow_html=True)
 
 # -------------------------------------------------------------------
-# PÁGINA 1: SIMULADOR DE RETIRO (Se mantiene igual)
+# PÁGINA 1: SIMULADOR DE RETIRO (CON ZONA GBM+)
 # -------------------------------------------------------------------
 if menu == "📈 Simulador de Retiro":
-    st.title("📈 Proyección de Patrimonio")
-    st.markdown("Visualiza cómo crece tu dinero en el tiempo con el poder del interés compuesto.")
+    st.title("📈 Motor de Retiro")
+    st.markdown("<p style='color:#8E8E93;'>Proyección de interés compuesto y acumulación de capital a largo plazo.</p>", unsafe_allow_html=True)
 
     with st.container():
         c1, c2, c3, c4 = st.columns(4)
@@ -104,112 +138,102 @@ if menu == "📈 Simulador de Retiro":
             datos.append({
                 "Año": ano_actual,
                 "Capital Propio": total_aportado_acum,
-                "Rendimientos Generados": saldo_actual - total_aportado_acum,
+                "Rendimientos": saldo_actual - total_aportado_acum,
                 "Total": saldo_actual
             })
             
     df = pd.DataFrame(datos)
-    st.markdown("### Resumen de tu Retiro")
+    st.markdown("### 📊 Performance")
     k1, k2, k3, k4 = st.columns(4)
-    k1.metric("Total Aportado", formatear_kpi(df["Capital Propio"].iloc[-1]))
-    k2.metric("Rendimientos", formatear_kpi(df["Rendimientos Generados"].iloc[-1]))
+    k1.metric("Capital Aportado", formatear_kpi(df["Capital Propio"].iloc[-1]))
+    k2.metric("Rendimientos", formatear_kpi(df["Rendimientos"].iloc[-1]))
     k3.metric("Patrimonio Final", formatear_kpi(df["Total"].iloc[-1]))
-    k4.metric("Sueldo Mensual Libre", formatear_kpi((df["Total"].iloc[-1] * 0.05) / 12))
+    k4.metric("Flujo Mensual Libre", formatear_kpi((df["Total"].iloc[-1] * 0.05) / 12))
 
-    fig = px.area(df, x="Año", y=["Capital Propio", "Rendimientos Generados"], color_discrete_sequence=["#E5E5EA", "#007AFF"])
-    fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", font_color="white", hovermode="x unified", margin=dict(l=0, r=0, t=30, b=0))
+    fig = px.area(df, x="Año", y=["Capital Propio", "Rendimientos"], color_discrete_sequence=["#333333", "#00FFCC"])
+    fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", font_color="#FFFFFF", hovermode="x unified", margin=dict(l=0, r=0, t=30, b=0))
     st.plotly_chart(fig, use_container_width=True)
 
+    # ZONA DE MONETIZACIÓN 2: CTA PARA ABRIR CUENTA (GBM+)
+    # Esta es la caja de conversión. Cuando el usuario se motiva al ver sus millones, le pones la solución enfrente.
+    st.markdown("""
+    <div class="monetization-btn" style="background: linear-gradient(145deg, #121212, #1c1c1e); border: 1px solid #00FFCC; border-radius: 12px; padding: 30px; text-align: center; margin-top: 20px;">
+        <h2 style="color: #fff; margin-bottom: 5px;">🚀 Pasa a la Acción. Abre tu cuenta de inversión hoy.</h2>
+        <p style="color: #8E8E93; font-size: 16px; margin-bottom: 25px;">Abre tu cuenta en <b>GBM+</b>, realiza tu primer depósito de $100 MXN y recibe una acción gratis (con valor de hasta $350) usando mi enlace.</p>
+        <a href="https://promos.gbm.com/" target="_blank" style="background: linear-gradient(90deg, #00FFCC 0%, #007AFF 100%); color: #000; padding: 15px 40px; border-radius: 30px; text-decoration: none; font-size: 18px; font-weight: 900; display: inline-block; box-shadow: 0 4px 15px rgba(0, 255, 204, 0.3);">Reclamar mi Acción Gratis</a>
+    </div>
+    """, unsafe_allow_html=True)
+
 # -------------------------------------------------------------------
-# PÁGINA 2: CONTROL DE PRESUPUESTO (ACTUALIZADA)
+# PÁGINA 2: CONTROL DE PRESUPUESTO
 # -------------------------------------------------------------------
 elif menu == "💼 Presupuesto Mensual":
-    st.title("💼 Presupuesto Base Cero")
-    st.markdown("Controla exactamente a dónde va cada peso de tus ingresos combinados.")
+    st.title("💼 Ingeniería de Flujo")
+    st.markdown("<p style='color:#8E8E93;'>Presupuesto Base Cero: Asigna una función a cada peso de tus ingresos.</p>", unsafe_allow_html=True)
 
-    # GUÍA FINANCIERA (DISCLAIMER)
     st.markdown("""
     <div class="disclaimer-box">
-        <b>💡 Tip Financiero: La Regla 50/30/20 (Adaptada)</b><br>
-        Lo ideal para unas finanzas blindadas es apuntar a: 
-        <span style="color:var(--pure-white);"><b>50% Gastos Fijos</b></span> | 
-        <span style="color:#007AFF;"><b>20% Inversión (Retiro)</b></span> | 
-        <span style="color:#00d2ff;"><b>10% Liquidez (Ahorro corto plazo)</b></span> | 
-        <span style="color:#8E8E93;"><b>20% Estilo de Vida</b></span>.
+        <b>💡 Algoritmo de Asignación (Regla 50/30/20)</b><br>
+        <span style="color:#fff;"><b>50% Fijos</b></span> | 
+        <span style="color:var(--neon-cyan);"><b>20% Retiro</b></span> | 
+        <span style="color:var(--neon-blue);"><b>10% Liquidez</b></span> | 
+        <span style="color:#8E8E93;"><b>20% Estilo</b></span>
     </div>
     """, unsafe_allow_html=True)
 
     ingreso_total = st.number_input("Ingreso Total Disponible del Mes ($)", min_value=1000.0, value=82500.0, step=1000.0)
 
-    st.markdown("### 1. Tus Costos Fijos Exactos")
-    with st.expander("Desglosar gastos fijos mensuales", expanded=False):
+    st.markdown("### 1. Costos Fijos Operativos")
+    with st.expander("Desglosar estructura de costos fijos", expanded=False):
         g1, g2, g3 = st.columns(3)
         with g1:
             renta = st.number_input("🏠 Hipoteca / Renta ($)", value=12000.0, step=500.0)
-            servicios = st.number_input("⚡ Servicios (Luz, Internet) ($)", value=2500.0, step=100.0)
+            servicios = st.number_input("⚡ Servicios ($)", value=2500.0, step=100.0)
         with g2:
-            auto = st.number_input("🚗 Autos (Pago y Gasolina) ($)", value=6000.0, step=500.0)
+            auto = st.number_input("🚗 Autos ($)", value=6000.0, step=500.0)
             supermercado = st.number_input("🛒 Supermercado ($)", value=8000.0, step=500.0)
         with g3:
             seguros = st.number_input("🛡️ Seguros ($)", value=2000.0, step=100.0)
-            otros = st.number_input("📦 Otros fijos ($)", value=1500.0, step=100.0)
+            otros = st.number_input("📦 Otros ($)", value=1500.0, step=100.0)
 
     total_fijos = renta + servicios + auto + supermercado + seguros + otros
     pct_fijos = (total_fijos / ingreso_total) * 100
     dinero_restante = ingreso_total - total_fijos
     pct_restante = 100.0 - pct_fijos
 
-    st.markdown("### 2. Asignación del Restante (Inversión, Liquidez y Estilo)")
+    st.markdown("### 2. Distribución de Flujo Libre")
     
     if dinero_restante < 0:
-        st.error(f"⚠️ Peligro: Tus gastos fijos (${total_fijos:,.2f}) superan tu ingreso.")
+        st.error(f"⚠️ Alerta: Flujo de caja negativo. Costos fijos (${total_fijos:,.2f}) > Ingresos.")
     else:
-        st.info(f"Tus gastos fijos consumen el **{pct_fijos:.1f}%** de tu sueldo. Tienes un **{pct_restante:.1f}%** libre.")
+        st.info(f"Costos fijos: **{pct_fijos:.1f}%**. Capital disponible para distribuir: **{pct_restante:.1f}%**.")
         
         col_sliders, col_grafica = st.columns([1, 1])
 
         with col_sliders:
-            st.write(f"Distribuye el {pct_restante:.1f}% sobrante:")
-            
-            # SLIDER 1: Inversión a largo plazo (Retiro)
-            pct_inversion = st.slider("📈 Inversión Largo Plazo (Retiro) %", min_value=0.0, max_value=float(pct_restante), value=float(pct_restante)*0.4, step=1.0)
-            
-            # SLIDER 2: Liquidez (Ahorro corto plazo). Su máximo es lo que sobra después de Inversión.
+            st.write("")
+            pct_inversion = st.slider("📈 Retiro / Largo Plazo %", min_value=0.0, max_value=float(pct_restante), value=float(pct_restante)*0.4, step=1.0)
             limite_liquidez = pct_restante - pct_inversion
             pct_liquidez = st.slider("💧 Liquidez / Emergencias %", min_value=0.0, max_value=float(limite_liquidez), value=float(limite_liquidez)*0.4, step=1.0)
-            
-            # El resto se va en automático a Estilo de Vida
             pct_estilo = pct_restante - pct_inversion - pct_liquidez
-            st.write(f"✈️ Estilo de Vida se ajusta automáticamente a: **{pct_estilo:.1f}%**")
+            st.write(f"✈️ Estilo de Vida (Automático): **{pct_estilo:.1f}%**")
 
         monto_inversion = ingreso_total * (pct_inversion / 100)
         monto_liquidez = ingreso_total * (pct_liquidez / 100)
         monto_estilo = ingreso_total * (pct_estilo / 100)
 
         with col_grafica:
-            labels = ['Gastos Fijos', 'Inversión (S&P 500)', 'Liquidez (Efectivo)', 'Estilo de Vida']
+            labels = ['Fijos', 'Retiro', 'Liquidez', 'Estilo']
             values = [total_fijos, monto_inversion, monto_liquidez, monto_estilo]
-            colores = ['#2C2C2E', '#007AFF', '#00d2ff', '#E5E5EA'] # Gris oscuro, Azul primario, Azul Neón (Liquidez), Blanco
+            colores = ['#333333', '#00FFCC', '#007AFF', '#E5E5EA'] 
             
-            fig2 = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.55, marker=dict(colors=colores, line=dict(color='#1c1c1e', width=3)))])
-            fig2.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", font_color="white", margin=dict(t=10, b=10, l=10, r=10))
+            fig2 = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.65, marker=dict(colors=colores, line=dict(color='#000000', width=4)))])
+            fig2.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", font_color="#FFFFFF", margin=dict(t=10, b=10, l=10, r=10))
             st.plotly_chart(fig2, use_container_width=True)
 
-        st.markdown("### Tus Transferencias de ESTE MES")
+        st.markdown("### Target Mensual")
         t1, t2, t3, t4 = st.columns(4)
-        t1.metric("🏠 Costos Fijos", formatear_kpi(total_fijos))
-        t2.metric("📈 Broker (Retiro)", formatear_kpi(monto_inversion))
-        t3.metric("💧 Cuenta Liquidez", formatear_kpi(monto_liquidez))
-        t4.metric("✈️ Estilo de Vida", formatear_kpi(monto_estilo))
-
-        st.markdown("---")
-        
-        # PROYECCIÓN ANUAL
-        st.markdown("### 📅 Proyección Anual (Forecast a 12 meses)")
-        st.caption("Esto es lo que acumularás o gastarás en un año si mantienes exactamente este mismo presupuesto todos los meses.")
-        
-        a1, a2, a3, a4 = st.columns(4)
-        a1.metric("Gastado en Fijos", formatear_kpi(total_fijos * 12))
-        a2.metric("Total Invertido", formatear_kpi(monto_inversion * 12))
-        a3.metric("Efectivo Ahorrado", formatear_kpi(monto_liquidez * 12))
-        a4.metric("Gastado en Estilo", formatear_kpi(monto_estilo * 12))
+        t1.metric("🏠 Fijos", formatear_kpi(total_fijos))
+        t2.metric("📈 Retiro", formatear_kpi(monto_inversion))
+        t3.metric("💧 Liquidez", formatear_kpi(monto_liquidez))
+        t4.metric("✈️ Estilo", formatear_kpi(monto_estilo))
