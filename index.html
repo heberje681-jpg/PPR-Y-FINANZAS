@@ -68,7 +68,16 @@
         .input-group { display: flex; flex-direction: column; margin-bottom: 15px; }
         label { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        input[type="number"] { background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-main); padding: 14px 15px; border-radius: 8px; font-size: 16px; outline: none; transition: 0.3s; font-family: 'Inter', monospace; }
+        /* OCULTAR FLECHAS NATIVAS DE INPUT NUMBER */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield; /* Para Firefox */
+            background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-main); padding: 14px 15px; border-radius: 8px; font-size: 16px; outline: none; transition: 0.3s; font-family: 'Inter', monospace;
+        }
         input[type="number"]:focus { border-color: var(--finance-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
         
         /* SLIDERS MODERNOS */
@@ -132,16 +141,14 @@
     <div class="main-content">
         <div class="container">
             
-            <!-- PÁGINA 1: GUÍA EDUCATIVA (ESTILO LANDING PAGE ACORDEÓN) -->
+            <!-- PÁGINA 1: GUÍA EDUCATIVA (ACORDEONES AMPLIADOS) -->
             <div id="guia" class="section active">
                 
-                <!-- Hero Section de la Guía -->
                 <div style="text-align: center; margin-bottom: 50px; margin-top: 20px;">
                     <h1 style="font-size: 40px; font-weight: 900; margin-bottom: 15px;">La ingeniería detrás de tu riqueza.</h1>
                     <p style="color: var(--text-muted); font-size: 18px; max-width: 600px; margin: 0 auto;">No necesitas un salario millonario para ser libre. Descubre los sistemas exactos que usan los expertos para multiplicar su capital.</p>
                 </div>
                 
-                <!-- Acordeones Interactivos -->
                 <div class="accordion-wrapper">
                     
                     <div class="accordion-item active">
@@ -152,10 +159,10 @@
                             </div>
                             <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
                         </button>
-                        <div class="accordion-content" style="max-height: 500px;"> <!-- Abierto por defecto -->
+                        <div class="accordion-content" style="max-height: 500px;"> 
                             <div class="accordion-content-inner">
                                 <p>Imagina que haces una bola de nieve en la cima de una montaña. Al principio es pequeña y tienes que empujarla con tus propias manos (tu <b>Capital Aportado</b>). Sin embargo, mientras va bajando, la nieve vieja recoge nieve nueva (los <b>Rendimientos</b>).</p>
-                                <p style="margin-top: 15px;">Llegará un punto donde la bola es tan gigantesca que crece sola. Ese es el interés compuesto: ganar intereses sobre los intereses que ya habías ganado. El factor más importante de la ecuación no es cuánto dinero tienes hoy, sino <b>el tiempo</b> que dejas rodar esa bola ininterrumpidamente.</p>
+                                <p style="margin-top: 15px;">Llegará un punto donde la bola es tan gigantesca que crece sola sin que tú hagas esfuerzo. Ese es el interés compuesto: ganar intereses sobre los intereses que ya habías ganado. El factor más importante de la ecuación no es cuánto dinero tienes hoy, sino <b>el tiempo</b> que dejas rodar esa bola ininterrumpidamente.</p>
                             </div>
                         </div>
                     </div>
@@ -164,17 +171,17 @@
                         <button class="accordion-header" onclick="toggleAccordion(this)">
                             <div class="title-wrapper">
                                 <div class="icon-box"><svg class="icon" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg></div>
-                                La Regla de Asignación (50/30/20)
+                                ¿Cuánto porcentaje de tu salario debes invertir? (50/30/20)
                             </div>
                             <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
                         </button>
                         <div class="accordion-content">
                             <div class="accordion-content-inner">
-                                <p>La estructura base para construir riqueza sin ahogarte en deudas consiste en darle un trabajo a cada peso antes de gastarlo:</p>
+                                <p>La regla de oro para construir verdadera riqueza sin ahogarte en deudas consiste en darle un trabajo a cada peso antes de gastarlo:</p>
                                 <ul>
                                     <li><b>50% Costos Fijos:</b> Renta, luz, gasolina, supermercado, seguros. Si esto supera el 50%, tu estilo de vida es insostenible a largo plazo.</li>
                                     <li><b>20% Estilo de Vida:</b> Salidas, restaurantes, hobbies, ropa. El dinero está para disfrutarse hoy también.</li>
-                                    <li><b>30% Tu Futuro:</b> Inversiones de largo plazo (retiro) y fondos de liquidez (emergencias). Este porcentaje es el que compra tu libertad.</li>
+                                    <li><b>30% Tu Futuro:</b> Este porcentaje es el que compra tu libertad. Se divide idealmente en 20% al largo plazo (retiro/inversión) y 10% a liquidez (fondo de emergencias).</li>
                                 </ul>
                             </div>
                         </div>
@@ -184,14 +191,33 @@
                         <button class="accordion-header" onclick="toggleAccordion(this)">
                             <div class="title-wrapper">
                                 <div class="icon-box"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
-                                Tasa Real vs. Inflación
+                                Entendiendo la Tasa Real vs. Inflación
                             </div>
                             <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
                         </button>
                         <div class="accordion-content">
                             <div class="accordion-content-inner">
                                 <p>No todo lo que paga el banco es ganancia. La inflación es el aumento invisible de los precios que se come tu dinero. Por ejemplo, si un banco te paga 10% de rendimiento, pero la inflación del país es 4%, tu <b>Tasa Real (ganancia pura) es 6%</b>.</p>
-                                <p style="margin-top: 15px;">Históricamente, el mercado de valores de Estados Unidos (el S&P 500) ha ofrecido una tasa real promedio del <b>7% al 8% anual</b> a muy largo plazo, después de descontar la inflación.</p>
+                                <p style="margin-top: 15px;">Históricamente, el mercado de valores de Estados Unidos (el S&P 500) ha ofrecido una tasa real promedio del <b>7% al 8% anual</b> a largo plazo, después de descontar la inflación.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="title-wrapper">
+                                <div class="icon-box"><svg class="icon" viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg></div>
+                                ¿En qué instrumentos debo invertir?
+                            </div>
+                            <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <p>Para construir un portafolio a prueba de balas, necesitas dividir tu dinero en dos cubetas estratégicas:</p>
+                                <ul>
+                                    <li><b>Cubeta de Largo Plazo (Bolsa de Valores):</b> Dinero que no tocarás en 10, 20 o 30 años. Se invierte comprando ETFs como <b>VOO</b> o <b>IVVPESO</b> (las 500 empresas más grandes de EE.UU.). Da grandes rendimientos pero es volátil a corto plazo.</li>
+                                    <li><b>Cubeta de Corto Plazo (Liquidez / Renta Fija):</b> Dinero para el fondo de emergencias, el enganche de un auto o un viaje. Necesita estar seguro y disponible. Se invierte en <b>CETES (gobierno)</b> o en SOFIPOS como la <b>cuenta de Nu</b> que te da rendimientos diarios.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -300,13 +326,11 @@
             const content = item.querySelector('.accordion-content');
             const isActive = item.classList.contains('active');
             
-            // Cerrar todos
             document.querySelectorAll('.accordion-item').forEach(acc => {
                 acc.classList.remove('active');
                 acc.querySelector('.accordion-content').style.maxHeight = null;
             });
             
-            // Abrir el clickeado si no estaba activo
             if (!isActive) {
                 item.classList.add('active');
                 content.style.maxHeight = content.scrollHeight + "px";
