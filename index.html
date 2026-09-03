@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Financiero Pro</title>
-    <!-- Librería para las gráficas -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
     <style>
@@ -14,6 +13,7 @@
             --border-gray: #333333;
             --neon-cyan: #00FFCC; 
             --neon-blue: #007AFF;
+            --nu-purple: #8A05BE;
             --text-white: #FFFFFF;
             --text-muted: #8E8E93;
         }
@@ -39,9 +39,11 @@
         .kpi-title { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
         .kpi-value { font-size: 24px; font-weight: 900; color: var(--text-white); }
         
-        .ad-banner { background: #121212; border: 1px solid #333; padding: 20px; border-radius: 12px; text-align: center; margin-top: 20px; }
-        .ad-badge { color: #8E8E93; font-size: 10px; letter-spacing: 2px; margin-bottom: 10px; display: block; }
+        .ad-banner { background: #121212; border: 1px solid #333; padding: 20px; border-radius: 12px; text-align: center; margin-top: 20px; transition: 0.3s; }
+        .ad-banner:hover { box-shadow: 0 4px 15px rgba(138, 5, 190, 0.3); border-color: var(--nu-purple); }
+        .ad-badge { color: #8E8E93; font-size: 10px; letter-spacing: 2px; margin-bottom: 10px; display: block; font-weight: bold; }
         .btn-cta { display: inline-block; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: 900; margin-top: 15px; transition: 0.3s; }
+        .btn-cta:hover { transform: scale(1.05); }
         
         .alert-box { padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; display: none; }
         .alert-error { background: rgba(255,59,48,0.1); border: 1px solid #FF3B30; color: #FF3B30; }
@@ -67,11 +69,12 @@
             <p style="font-size: 12px; color: #555;">[Aquí inyectaremos AdSense después]</p>
         </div>
 
-        <div class="ad-banner">
-            <span class="ad-badge">SPONSORED</span>
-            <h3 style="margin-bottom: 5px;">💳 Tarjeta Nu</h3>
-            <p style="font-size: 12px; color: #aaa;">14% de rendimiento anual disponible 24/7.</p>
-            <a href="https://nu.com.mx/" target="_blank" class="btn-cta" style="background: #8A05BE; color: white; width: 100%;">Solicitar Ahora</a>
+        <!-- ANUNCIO AFILIADO NU (SIDEBAR) -->
+        <div class="ad-banner" style="border-color: var(--nu-purple);">
+            <span class="ad-badge" style="color: var(--nu-purple);">RECOMENDADO</span>
+            <h3 style="margin-bottom: 5px;">💳 Nu Débito + Crédito</h3>
+            <p style="font-size: 12px; color: #aaa;">$0 anualidad y hasta <b>13.00%</b> anual de rendimiento.</p>
+            <a href="https://nubank.com.mx/mgm/?id=QZwETAFIV96OJeF2mLtqvA&msg=35985&utm_channel=referral&utm_medium=whatsapp&utm_source=mgm&mgm-campaign=mgm-cash-rewards" target="_blank" class="btn-cta" style="background: var(--nu-purple); color: white; width: 100%;">👉 Aplica en minutos</a>
         </div>
     </div>
 
@@ -99,12 +102,12 @@
 
             <div style="height: 350px; width: 100%;"><canvas id="retiroChart"></canvas></div>
 
-            <div class="ad-banner" style="background: linear-gradient(145deg, #121212, #1c1c1e); border-color: #00FFCC; padding: 40px; margin-top: 40px;">
-                <span class="ad-badge">INVERSIÓN PATROCINADA</span>
-                <img src="https://gbm.com/wp-content/uploads/2023/12/logo-gbm-blanco.svg" alt="GBM+" style="width: 150px; margin-bottom: 15px;">
-                <h2 style="font-weight: 900;">Pon a trabajar tu dinero hoy</h2>
-                <p style="color: #aaa; margin-bottom: 20px;">Abre tu cuenta, fondea desde $100 MXN y <b>recibe tu primera acción gratis</b> (valor hasta $350).</p>
-                <a href="TU_ENLACE_GBM_AQUI" target="_blank" class="btn-cta" style="background: #00FFCC; color: #000;">Reclamar Acción Gratis</a>
+            <!-- ANUNCIO GIGANTE NU (REEMPLAZA A GBM) -->
+            <div class="ad-banner" style="background: linear-gradient(145deg, #121212, #1c1c1e); border-color: var(--nu-purple); padding: 40px; margin-top: 40px;">
+                <span class="ad-badge" style="color: var(--nu-purple);">OPORTUNIDAD DE LIQUIDEZ</span>
+                <h2 style="font-weight: 900; font-size: 26px;">Haz que tu dinero crezca hasta 13.00% anual</h2>
+                <p style="color: #aaa; margin-bottom: 20px; font-size: 16px;">Te invito a tener la <b>Tarjeta de Crédito Nu con $0 anualidad</b> y <b>Cuenta Nu de Débito</b>.<br>Para más información, visita el enlace de esta invitación.</p>
+                <a href="https://nubank.com.mx/mgm/?id=QZwETAFIV96OJeF2mLtqvA&msg=35985&utm_channel=referral&utm_medium=whatsapp&utm_source=mgm&mgm-campaign=mgm-cash-rewards" target="_blank" class="btn-cta" style="background: var(--nu-purple); color: #FFF; font-size: 18px; padding: 15px 40px;">👉 Aplica en tan solo minutos</a>
             </div>
         </div>
 
@@ -163,7 +166,6 @@
 
     <!-- SCRIPT PRINCIPAL -->
     <script>
-        // Formateador de moneda
         function fMoney(num) {
             if (num === 0 || isNaN(num)) return "$0";
             if (num >= 1000000) return "$" + (num / 1000000).toFixed(1).replace('.0', '') + "M";
@@ -171,7 +173,6 @@
             return "$" + num.toLocaleString('en-US', {maximumFractionDigits:0});
         }
 
-        // Cambio de pestañas
         function switchTab(tabId, element) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
@@ -180,7 +181,6 @@
             if(tabId === 'presupuesto') calcularPresupuesto();
         }
 
-        // ================= LOGICA SIMULADOR =================
         let retiroChartObj = null;
         function calcularRetiro() {
             let cap = parseFloat(document.getElementById('capInicial').value) || 0;
@@ -217,21 +217,17 @@
             });
         }
 
-        // ================= LOGICA PRESUPUESTO =================
         let pctLibreGlobal = 0;
         let presChartObj = null;
 
         function calcularPresupuesto() {
             let ingreso = parseFloat(document.getElementById('ingresoTotal').value) || 0;
-            
-            // Sumar fijos
             let fijos = 0;
             document.querySelectorAll('.fijo-input').forEach(inp => fijos += (parseFloat(inp.value) || 0));
             
             let sobrante = ingreso - fijos;
             pctLibreGlobal = ingreso > 0 ? (sobrante / ingreso) * 100 : 0;
 
-            // Alertas
             let alertE = document.getElementById('alertaError');
             let alertI = document.getElementById('alertaInfo');
             if (ingreso === 0) {
@@ -244,7 +240,6 @@
                 alertI.innerHTML = `Fijos consumen el <b>${((fijos/ingreso)*100).toFixed(1)}%</b>. Tienes <b>${pctLibreGlobal.toFixed(1)}%</b> libre para distribuir.`;
             }
 
-            // Ajustar topes de sliders
             let sliderRet = document.getElementById('pctRetiro');
             sliderRet.max = pctLibreGlobal.toFixed(1);
             if(parseFloat(sliderRet.value) > pctLibreGlobal) sliderRet.value = pctLibreGlobal;
@@ -261,21 +256,16 @@
             let sliderLiq = document.getElementById('pctLiquidez');
 
             let valRet = parseFloat(sliderRet.value) || 0;
-            
-            // Liquidez máximo es lo que sobra después de retiro
             let maxLiq = pctLibreGlobal - valRet;
             sliderLiq.max = maxLiq.toFixed(1);
             if(parseFloat(sliderLiq.value) > maxLiq) sliderLiq.value = maxLiq;
             let valLiq = parseFloat(sliderLiq.value) || 0;
-
-            // Estilo es el residuo final
             let valEst = Math.max(0, pctLibreGlobal - valRet - valLiq);
 
             document.getElementById('valRetiro').innerText = valRet.toFixed(1);
             document.getElementById('valLiquidez').innerText = valLiq.toFixed(1);
             document.getElementById('valEstilo').innerText = valEst.toFixed(1);
 
-            // Dinero Real
             let mRet = ingreso * (valRet / 100);
             let mLiq = ingreso * (valLiq / 100);
             let mEst = ingreso * (valEst / 100);
@@ -285,7 +275,6 @@
             document.getElementById('kpiLiquidez').innerText = fMoney(mLiq);
             document.getElementById('kpiEstilo').innerText = fMoney(mEst);
 
-            // Dibujar Dona
             dibujarDona(fijos, mRet, mLiq, mEst);
         }
 
@@ -293,7 +282,6 @@
             let ctx = document.getElementById('presupuestoChart').getContext('2d');
             if(presChartObj) presChartObj.destroy();
             
-            // Si todo está en 0, mostrar dona gris vacía
             let datos = (fijos===0 && ret===0 && liq===0 && est===0) ? [1] : [fijos, ret, liq, est];
             let colores = (fijos===0 && ret===0 && liq===0 && est===0) ? ['#333'] : ['#333333', '#00FFCC', '#007AFF', '#E5E5EA'];
 
@@ -304,7 +292,6 @@
             });
         }
 
-        // Inicializar
         window.onload = function() { calcularRetiro(); calcularPresupuesto(); };
     </script>
 </body>
